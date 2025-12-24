@@ -2,7 +2,7 @@ package com.demo.TaskManager.controllers;
 
 import com.demo.TaskManager.dtos.TaskRequest;
 import com.demo.TaskManager.dtos.TaskResponse;
-import com.demo.TaskManager.entities.User;
+import com.demo.TaskManager.security.SecurityUser;
 import com.demo.TaskManager.services.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +24,16 @@ public class TaskController {
     public ResponseEntity<TaskResponse> createTask(
             @PathVariable Long projectId,
             @Valid @RequestBody TaskRequest request,
-            @AuthenticationPrincipal User user) {
-        TaskResponse response = taskService.createTask(projectId, request, user.getId());
+            @AuthenticationPrincipal SecurityUser securityUser) {
+        TaskResponse response = taskService.createTask(projectId, request, securityUser.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<TaskResponse>> getAllTasks(
             @PathVariable Long projectId,
-            @AuthenticationPrincipal User user) {
-        List<TaskResponse> tasks = taskService.getProjectTasks(projectId, user.getId());
+            @AuthenticationPrincipal SecurityUser securityUser) {
+        List<TaskResponse> tasks = taskService.getProjectTasks(projectId, securityUser.getUserId());
         return ResponseEntity.ok(tasks);
     }
 
@@ -41,8 +41,8 @@ public class TaskController {
     public ResponseEntity<TaskResponse> getTaskById(
             @PathVariable Long projectId,
             @PathVariable Long taskId,
-            @AuthenticationPrincipal User user) {
-        TaskResponse task = taskService.getTaskById(projectId, taskId, user.getId());
+            @AuthenticationPrincipal SecurityUser securityUser) {
+        TaskResponse task = taskService.getTaskById(projectId, taskId, securityUser.getUserId());
         return ResponseEntity.ok(task);
     }
 
@@ -51,8 +51,8 @@ public class TaskController {
             @PathVariable Long projectId,
             @PathVariable Long taskId,
             @Valid @RequestBody TaskRequest request,
-            @AuthenticationPrincipal User user) {
-        TaskResponse response = taskService.updateTask(projectId, taskId, request, user.getId());
+            @AuthenticationPrincipal SecurityUser securityUser) {
+        TaskResponse response = taskService.updateTask(projectId, taskId, request, securityUser.getUserId());
         return ResponseEntity.ok(response);
     }
 
@@ -60,8 +60,8 @@ public class TaskController {
     public ResponseEntity<TaskResponse> markTaskAsCompleted(
             @PathVariable Long projectId,
             @PathVariable Long taskId,
-            @AuthenticationPrincipal User user) {
-        TaskResponse response = taskService.markTaskAsCompleted(projectId, taskId, user.getId());
+            @AuthenticationPrincipal SecurityUser securityUser) {
+        TaskResponse response = taskService.markTaskAsCompleted(projectId, taskId, securityUser.getUserId());
         return ResponseEntity.ok(response);
     }
 
@@ -69,8 +69,8 @@ public class TaskController {
     public ResponseEntity<Void> deleteTask(
             @PathVariable Long projectId,
             @PathVariable Long taskId,
-            @AuthenticationPrincipal User user) {
-        taskService.deleteTask(projectId, taskId, user.getId());
+            @AuthenticationPrincipal SecurityUser securityUser) {
+        taskService.deleteTask(projectId, taskId, securityUser.getUserId());
         return ResponseEntity.noContent().build();
     }
 }
