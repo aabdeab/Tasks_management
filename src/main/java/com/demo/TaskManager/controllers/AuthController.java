@@ -23,7 +23,7 @@ public class AuthController {
         String token;
         token = authService.registerUser(dto);
         ApiResponse<String> response = ApiResponse.success(token, "Inscription réussie");
-        return ResponseEntity.ok(response) ;
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
@@ -33,12 +33,4 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/whoami")
-    public ResponseEntity<ApiResponse<UserInfoResponse>> whoami() {
-        UserInfoResponse userInfo = authService.getCurrentUserInfo();
-        ApiResponse<UserInfoResponse> response = ApiResponse.success(userInfo, "Informations utilisateur récupérées");
-        return ResponseEntity.ok(response);
-    }
 }
-
-

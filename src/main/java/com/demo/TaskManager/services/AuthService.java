@@ -56,29 +56,7 @@ public class AuthService {
         return tokenService.generateToken(authentication);
     }
 
-    /**
-     * Récupère les informations de l'utilisateur connecté
-     * @return UserInfoResponse contenant les informations de l'utilisateur
-     * @throws ResourceNotFoundException si l'utilisateur n'est pas trouvé
-     */
-    public UserInfoResponse getCurrentUserInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ResourceNotFoundException("Utilisateur non authentifié");
-        }
-
-        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
-        User user = securityUser.user();
-
-        log.info("[USER] : Fetching current user info for user with id {}", user.getId());
-
-        return UserInfoResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
-                .build();
-    }
 
 }
 

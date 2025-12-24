@@ -20,4 +20,12 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> error(String error, String message) {
         return new ApiResponse<>(false, message, null, error);
     }
+
+    public static <T> ApiResponse<T> error(String error) {
+        return new ApiResponse<>(false, error, null, error);
+    }
+
+    public static <T> ApiResponse<T> error(String message, T errorData) {
+        return new ApiResponse<>(false, message, errorData, message);
+    }
 }
