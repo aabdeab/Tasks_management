@@ -1,8 +1,11 @@
 package com.demo.TaskManager.services;
 
+import com.demo.TaskManager.common.exceptions.ResourceNotFoundException;
 import com.demo.TaskManager.dtos.LoginRequest;
 import com.demo.TaskManager.dtos.RegisterRequest;
+import com.demo.TaskManager.dtos.UserInfoResponse;
 import com.demo.TaskManager.security.JwtService;
+import com.demo.TaskManager.security.SecurityUser;
 
 import com.demo.TaskManager.entities.User;
 import com.demo.TaskManager.repositories.UserRepository;
@@ -11,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +54,30 @@ public class AuthService {
         );
         log.info("[USER] : User Authenticated with email {}",authentication.getName());
         return tokenService.generateToken(authentication);
+    }
+
+    /**
+     * Récupère les informations de l'utilisateur connecté
+     * @return UserInfoResponse contenant les informations de l'utilisateur
+     * @throws ResourceNotFoundException si l'utilisateur n'est pas trouvé
+     */
+    public UserInfoResponse getCurrentUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResourceNotFoundException("Utilisateur non authentifié");
+        }
+
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+        User user = securityUser.user();
+
+        log.info("[USER] : Fetching current user info for user with id {}", user.getId());
+
+        return UserInfoResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
     }
 
 }

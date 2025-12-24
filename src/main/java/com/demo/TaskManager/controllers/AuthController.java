@@ -3,6 +3,7 @@ package com.demo.TaskManager.controllers;
 import com.demo.TaskManager.common.ApiResponse;
 import com.demo.TaskManager.dtos.LoginRequest;
 import com.demo.TaskManager.dtos.RegisterRequest;
+import com.demo.TaskManager.dtos.UserInfoResponse;
 import com.demo.TaskManager.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,13 @@ public class AuthController {
     public ResponseEntity<ApiResponse<String>> login(@RequestBody @Valid LoginRequest loginRequest) {
         String token = authService.login(loginRequest);
         ApiResponse<String> response = ApiResponse.success(token, "Connexion réussie");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/whoami")
+    public ResponseEntity<ApiResponse<UserInfoResponse>> whoami() {
+        UserInfoResponse userInfo = authService.getCurrentUserInfo();
+        ApiResponse<UserInfoResponse> response = ApiResponse.success(userInfo, "Informations utilisateur récupérées");
         return ResponseEntity.ok(response);
     }
 }
