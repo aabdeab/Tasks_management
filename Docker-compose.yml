@@ -10,7 +10,36 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - task-manager-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: task_manager_app
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - task-manager-network
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
 
 volumes:
   postgres_data:
+
+networks:
+  task-manager-network:
+    driver: bridge
