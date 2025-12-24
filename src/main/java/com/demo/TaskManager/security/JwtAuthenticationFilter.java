@@ -1,6 +1,6 @@
 package com.demo.TaskManager.security;
 
-import com.demo.TaskManager.dtos.ErrorResponse;
+import com.demo.TaskManager.common.ErrorResponse;
 import com.demo.TaskManager.entities.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 
 import java.io.IOException;
 

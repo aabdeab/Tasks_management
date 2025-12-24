@@ -1,5 +1,6 @@
 package com.demo.TaskManager.security;
 
+import com.demo.TaskManager.entities.User;
 import com.demo.TaskManager.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +16,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email " + email));
+
+        return SecurityUser.builder()
+                .user(user)
+                .build();
     }
 }
 
